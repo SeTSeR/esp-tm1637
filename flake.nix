@@ -17,11 +17,9 @@
 
     devShells.aarch64-linux.default = pkgs.mkShell {
       packages = with pkgs; [
+        rustup
         cargo-generate
         cargo-espflash
-        rust-analyzer
-        rustfmt
-        rustup
         gcc13
       ];
       shellHook = ''

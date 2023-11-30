@@ -1,8 +1,5 @@
 #![no_std]
 #![no_main]
-use core::convert::Infallible;
-
-use esp_backtrace as _;
 
 use hal::{
     blocking::delay::DelayUs,
@@ -22,7 +19,6 @@ where
     DIO: InputPin<Error = E> + OutputPin<Error = E>,
     CLK: OutputPin<Error = E>,
     DL: DelayUs<u32>,
-    E: From<Infallible>,
 {
     // Time to wait before switching the lock in us.
     lock_time: u32,
@@ -42,7 +38,6 @@ where
     DIO: InputPin<Error = E> + OutputPin<Error = E>,
     CLK: OutputPin<Error = E>,
     DL: DelayUs<u32>,
-    E: From<Infallible>,
 {
     pub fn new(dio_pin: DIO, clk_pin: CLK, delay: DL) -> Result<TM1637<DIO, CLK, DL, E>, E> {
         let mut ret = TM1637 {
@@ -176,7 +171,6 @@ where
     DIO: InputPin<Error = E> + OutputPin<Error = E>,
     CLK: OutputPin<Error = E>,
     DL: DelayUs<u32>,
-    E: From<Infallible>,
 {
     fn drop(&mut self) {
         let _ = self.disable();

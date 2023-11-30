@@ -71,7 +71,7 @@ fn main() -> ! {
     )
     .unwrap();
 
-    let mut clocks = Clocks::new(19, 00).unwrap();
+    let mut clocks = Clocks::new(20, 00).unwrap();
 
     loop {
 	display.send_digits(&clocks.to_value()).unwrap();

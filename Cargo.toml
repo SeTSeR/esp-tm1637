@@ -4,6 +4,14 @@ version = "0.1.0"
 authors = ["Sergei Makarov <setser200018@gmail.com>"]
 edition = "2021"
 license = "MIT OR Apache-2.0"
+keywords = ["embedded", "embedded-hal-driver"]
+categories = ["embedded", "hardware-support", "no-std"]
+description = "Yet another platform agnostic driver for a LED-display powered by TM1637 chip"
+repository = "https://github.com/SeTSeR/esp32-tm1637"
+include = [
+  "**/*.rs",
+  "Cargo.toml",
+]
 
 [dependencies]
 hal = { package = "embedded-hal", version = "0.2.7", features = [ "unproven" ] }

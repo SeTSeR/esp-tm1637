@@ -2,8 +2,8 @@
 #![no_main]
 
 use hal::{
-    blocking::delay::DelayUs,
-    digital::v2::{InputPin, OutputPin},
+    delay::DelayUs,
+    digital::{InputPin, OutputPin},
 };
 
 use log::debug;
@@ -21,7 +21,7 @@ pub struct TM1637<DIO, CLK, DL, E>
 where
     DIO: InputPin<Error = E> + OutputPin<Error = E>,
     CLK: OutputPin<Error = E>,
-    DL: DelayUs<u32>,
+    DL: DelayUs,
 {
     // Time to wait before switching the lock in us.
     lock_time: u32,
@@ -40,7 +40,7 @@ impl<DIO, CLK, DL, E> TM1637<DIO, CLK, DL, E>
 where
     DIO: InputPin<Error = E> + OutputPin<Error = E>,
     CLK: OutputPin<Error = E>,
-    DL: DelayUs<u32>,
+    DL: DelayUs,
 {
     pub fn new(dio_pin: DIO, clk_pin: CLK, delay: DL) -> Result<TM1637<DIO, CLK, DL, E>, E> {
         let mut ret = TM1637 {
@@ -191,7 +191,7 @@ impl<DIO, CLK, DL, E> Drop for TM1637<DIO, CLK, DL, E>
 where
     DIO: InputPin<Error = E> + OutputPin<Error = E>,
     CLK: OutputPin<Error = E>,
-    DL: DelayUs<u32>,
+    DL: DelayUs,
 {
     fn drop(&mut self) {
         let _ = self.disable();

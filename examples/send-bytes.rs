@@ -7,7 +7,7 @@ use esp_backtrace as _;
 use esp_hal::entry;
 use esp_hal::prelude::*;
 use esp_println::logger::init_logger;
-    
+
 #[entry]
 fn main() -> ! {
     init_logger(log::LevelFilter::Info);
@@ -17,13 +17,13 @@ fn main() -> ! {
 
     let system = peripherals.SYSTEM.split();
     let clocks = ClockControl::configure(system.clock_control, CpuClock::Clock240MHz).freeze();
-        
+
     let io = esp_hal::IO::new(peripherals.GPIO, peripherals.IO_MUX);
     let delay = esp_hal::delay::Delay::new(&clocks);
-        
+
     let mut display = TM1637::new(
-        io.pins.gpio22.into_push_pull_output(),
-        io.pins.gpio23.into_push_pull_output(),
+        io.pins.gpio22.into_open_drain_output(),
+        io.pins.gpio23.into_open_drain_output(),
         delay,
     )
     .unwrap();

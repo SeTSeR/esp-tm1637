@@ -27,7 +27,7 @@ fn main() -> ! {
         delay,
     )
     .unwrap();
-    display.send_digits(&[0]).unwrap();
+    display.send_number(1432).unwrap();
 
     loop {}
 }

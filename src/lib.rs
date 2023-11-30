@@ -12,7 +12,10 @@ const DISPLAY_OFF: u8 = 0x80;
 const DISPLAY_ON: u8 = 0x8F;
 const AUTO_INC: u8 = 0x40;
 const C0H: u8 = 0xC0;
-const ENCODINGS: &[u8] = &[0b00111111, 1, 2, 3, 4, 5, 6, 7, 8, 0xFF];
+const ENCODINGS: &[u8] = &[
+    0b10111111, 0b10000110, 0b11011011, 0b11001111, 0b11100110, 0b11101101, 0b11111101, 0b10000111,
+    0b11111111, 0b11101111,
+];
 
 pub struct TM1637<DIO, CLK, DL, E>
 where
@@ -56,6 +59,24 @@ where
 
     pub fn send_digits(&mut self, data: &[u8]) -> Result<(), E> {
         self.send_iter(data.iter().map(|x| ENCODINGS[*x as usize]))
+    }
+
+    pub fn send_number(&mut self, mut data: u32) -> Result<(), E> {
+        let mut base = 1;
+        while base <= data {
+            base *= 10;
+        }
+        base /= 10;
+        self.send_iter(core::iter::from_fn(move || {
+            if base > 0 {
+                let res = data / base;
+                data = data % base;
+                base /= 10;
+                Some(ENCODINGS[res as usize])
+            } else {
+                None
+            }
+        }))
     }
 
     fn send_iter<Iter: Iterator<Item = u8>>(&mut self, data: Iter) -> Result<(), E> {

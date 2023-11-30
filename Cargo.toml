@@ -20,6 +20,9 @@ name = "send-bytes"
 [[example]]
 name = "send-digits"
 
+[[example]]
+name = "clocks"
+
 [profile.lto]
 inherits = "release"
 opt-level = 3

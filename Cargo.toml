@@ -1,6 +1,6 @@
 [package]
-name = "esp32_tm1637"
-version = "0.1.2"
+name = "esp-tm1637"
+version = "0.1.1"
 authors = ["Sergei Makarov <setser200018@gmail.com>"]
 edition = "2021"
 license = "MIT OR Apache-2.0"

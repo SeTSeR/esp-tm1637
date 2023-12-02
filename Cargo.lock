@@ -214,6 +214,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "esp-tm1637"
+version = "0.1.1"
+dependencies = [
+ "embedded-hal",
+ "esp-backtrace",
+ "esp-println",
+ "esp32-hal",
+ "log",
+]
+
+[[package]]
 name = "esp32"
 version = "0.27.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -231,17 +242,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9bb7f422b73053c301f8042a17aae7d115fa685560cb6ce3709a028874d7614e"
 dependencies = [
  "esp-hal-common",
-]
-
-[[package]]
-name = "esp32-tm1637"
-version = "0.1.2"
-dependencies = [
- "embedded-hal",
- "esp-backtrace",
- "esp-println",
- "esp32-hal",
- "log",
 ]
 
 [[package]]

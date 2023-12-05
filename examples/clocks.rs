@@ -15,7 +15,6 @@ pub enum ClocksError {
 
 pub struct Clocks {
     hours: u8,
-
     minutes: u8,
 }
 
@@ -72,8 +71,10 @@ fn main() -> ! {
     let mut clocks = Clocks::new(20, 00).unwrap();
 
     loop {
-        display.send_digits(&clocks.to_value()).unwrap();
-        delay.delay_ms(60 * 1000u32);
+	for i in 0..120 {
+            display.send_digits(&clocks.to_value(), (i & 1) != 0).unwrap();
+            delay.delay_ms(500u32);
+	}
         clocks.tick();
     }
 }

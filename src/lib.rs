@@ -13,8 +13,8 @@ const DISPLAY_ON: u8 = 0x8F;
 const AUTO_INC: u8 = 0x40;
 const C0H: u8 = 0xC0;
 const ENCODINGS: &[u8] = &[
-    0b10111111, 0b10000110, 0b11011011, 0b11001111, 0b11100110, 0b11101101, 0b11111101, 0b10000111,
-    0b11111111, 0b11101111,
+    0b00111111, 0b00000110, 0b01011011, 0b01001111, 0b01100110, 0b01101101, 0b01111101, 0b00000111,
+    0b01111111, 0b01101111,
 ];
 
 pub struct TM1637<DIO, CLK, DL, E>
@@ -57,8 +57,12 @@ where
         self.send_iter(data.iter().map(|x| *x))
     }
 
-    pub fn send_digits(&mut self, data: &[u8]) -> Result<(), E> {
-        self.send_iter(data.iter().map(|x| ENCODINGS[*x as usize]))
+    pub fn send_digits(&mut self, data: &[u8], clock_mode: bool) -> Result<(), E> {
+        self.send_iter(
+            data.iter()
+                .map(|x| ENCODINGS[*x as usize])
+                .map(|x| x | (clock_mode as u8) << 7),
+        )
     }
 
     pub fn send_number(&mut self, mut data: u32) -> Result<(), E> {

@@ -10,7 +10,7 @@ use esp_println::logger::init_logger;
 
 #[derive(Debug)]
 pub enum ClocksError {
-    Overflow
+    Overflow,
 }
 
 pub struct Clocks {
@@ -21,33 +21,31 @@ pub struct Clocks {
 
 impl Clocks {
     pub fn new(hours: u8, minutes: u8) -> Result<Clocks, ClocksError> {
-	if hours < 24 && minutes < 60 {
-	    Ok(Clocks {
-		hours, minutes
-	    })
-	} else {
-	    Err(ClocksError::Overflow)
-	}
+        if hours < 24 && minutes < 60 {
+            Ok(Clocks { hours, minutes })
+        } else {
+            Err(ClocksError::Overflow)
+        }
     }
 
     pub fn tick(&mut self) {
-	self.minutes += 1;
-	if self.minutes == 60 {
-	    self.minutes = 0;
-	    self.hours += 1;
-	}
-	if self.hours == 24 {
-	    self.hours = 0;
-	}
+        self.minutes += 1;
+        if self.minutes == 60 {
+            self.minutes = 0;
+            self.hours += 1;
+        }
+        if self.hours == 24 {
+            self.hours = 0;
+        }
     }
 
     pub fn to_value(&self) -> [u8; 4] {
-	[
-	    self.hours / 10,
-	    self.hours % 10,
-	    self.minutes / 10,
-	    self.minutes % 10,
-	]
+        [
+            self.hours / 10,
+            self.hours % 10,
+            self.minutes / 10,
+            self.minutes % 10,
+        ]
     }
 }
 
@@ -74,8 +72,8 @@ fn main() -> ! {
     let mut clocks = Clocks::new(20, 00).unwrap();
 
     loop {
-	display.send_digits(&clocks.to_value()).unwrap();
-	delay.delay_ms(60 * 1000u32);
-	clocks.tick();
+        display.send_digits(&clocks.to_value()).unwrap();
+        delay.delay_ms(60 * 1000u32);
+        clocks.tick();
     }
 }

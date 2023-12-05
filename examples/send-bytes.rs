@@ -27,7 +27,9 @@ fn main() -> ! {
         delay,
     )
     .unwrap();
-    display.send_bytes(&[0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]).unwrap();
+    display
+        .send_bytes(&[0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF])
+        .unwrap();
 
     loop {}
 }

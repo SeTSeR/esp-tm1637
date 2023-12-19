@@ -1,7 +1,7 @@
 #![no_std]
 #![no_main]
 
-use esp_tm1637::TM1637;
+use esp_tm1637::{BRIGHTNESS_MAX, TM1637};
 
 use esp_backtrace as _;
 use esp_hal::entry;
@@ -27,7 +27,7 @@ fn main() -> ! {
         delay,
     )
     .unwrap();
-    display.send_number(1432).unwrap();
+    display.send_number(1432, BRIGHTNESS_MAX).unwrap();
 
     loop {}
 }

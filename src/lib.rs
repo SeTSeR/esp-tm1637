@@ -8,8 +8,11 @@ use hal::{
 
 use log::debug;
 
+pub const BRIGHTNESS_MAX: u8 = 0x7;
+
+const DISPLAY_MASK: u8 = 0x88;
 const DISPLAY_OFF: u8 = 0x80;
-const DISPLAY_ON: u8 = 0x8F;
+const DISPLAY_ON: u8 = DISPLAY_MASK | BRIGHTNESS_MAX;
 const AUTO_INC: u8 = 0x40;
 const C0H: u8 = 0xC0;
 const ENCODINGS: &[u8] = &[
@@ -53,37 +56,45 @@ where
         Ok(ret)
     }
 
-    pub fn send_bytes(&mut self, data: &[u8]) -> Result<(), E> {
-        self.send_iter(data.iter().map(|x| *x))
+    pub fn send_bytes(&mut self, data: &[u8], brightness: u8) -> Result<(), E> {
+        self.send_iter(data.iter().map(|x| *x), brightness)
     }
 
-    pub fn send_digits(&mut self, data: &[u8], clock_mode: bool) -> Result<(), E> {
+    pub fn send_digits(&mut self, data: &[u8], clock_mode: bool, brightness: u8) -> Result<(), E> {
         self.send_iter(
             data.iter()
                 .map(|x| ENCODINGS[*x as usize])
                 .map(|x| x | (clock_mode as u8) << 7),
+            brightness,
         )
     }
 
-    pub fn send_number(&mut self, mut data: u32) -> Result<(), E> {
+    pub fn send_number(&mut self, mut data: u32, brightness: u8) -> Result<(), E> {
         let mut base = 1;
         while base <= data {
             base *= 10;
         }
         base /= 10;
-        self.send_iter(core::iter::from_fn(move || {
-            if base > 0 {
-                let res = data / base;
-                data = data % base;
-                base /= 10;
-                Some(ENCODINGS[res as usize])
-            } else {
-                None
-            }
-        }))
+        self.send_iter(
+            core::iter::from_fn(move || {
+                if base > 0 {
+                    let res = data / base;
+                    data = data % base;
+                    base /= 10;
+                    Some(ENCODINGS[res as usize])
+                } else {
+                    None
+                }
+            }),
+            brightness,
+        )
     }
 
-    fn send_iter<Iter: Iterator<Item = u8>>(&mut self, data: Iter) -> Result<(), E> {
+    fn send_iter<Iter: Iterator<Item = u8>>(
+        &mut self,
+        data: Iter,
+        brightness: u8,
+    ) -> Result<(), E> {
         self.start_send()?;
         self.send_byte(AUTO_INC)?;
         self.stop_send()?;
@@ -96,7 +107,9 @@ where
         self.stop_send()?;
 
         self.start_send()?;
-        self.send_byte(DISPLAY_ON)?;
+        assert!(brightness <= BRIGHTNESS_MAX);
+        let display_byte = DISPLAY_MASK | brightness;
+        self.send_byte(display_byte)?;
         self.stop_send()
     }
 

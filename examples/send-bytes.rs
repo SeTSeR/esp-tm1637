@@ -1,7 +1,7 @@
 #![no_std]
 #![no_main]
 
-use esp_tm1637::TM1637;
+use esp_tm1637::{BRIGHTNESS_MAX, TM1637};
 
 use esp_backtrace as _;
 use esp_hal::entry;
@@ -28,7 +28,7 @@ fn main() -> ! {
     )
     .unwrap();
     display
-        .send_bytes(&[0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF])
+        .send_bytes(&[0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF], BRIGHTNESS_MAX)
         .unwrap();
 
     loop {}

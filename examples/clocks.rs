@@ -1,7 +1,7 @@
 #![no_std]
 #![no_main]
 
-use esp_tm1637::TM1637;
+use esp_tm1637::{BRIGHTNESS_MAX, TM1637};
 
 use esp_backtrace as _;
 use esp_hal::entry;
@@ -71,10 +71,12 @@ fn main() -> ! {
     let mut clocks = Clocks::new(20, 00).unwrap();
 
     loop {
-	for i in 0..120 {
-            display.send_digits(&clocks.to_value(), (i & 1) != 0).unwrap();
+        for i in 0..120 {
+            display
+                .send_digits(&clocks.to_value(), (i & 1) != 0, BRIGHTNESS_MAX)
+                .unwrap();
             delay.delay_ms(500u32);
-	}
+        }
         clocks.tick();
     }
 }
